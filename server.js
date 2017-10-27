@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 
 import index from './routes/index';
 import users from './routes/users';
+import catalog from './routes/catalog';
 
 const server = express();
 
@@ -33,6 +34,7 @@ server.use(express.static(path.join(__dirname, 'public')));
 
 server.use('/', index);
 server.use('/users', users);
+server.use('/catalog', catalog);
 
 // catch 404 and forward to error handler
 server.use((req, res, next) => {
