@@ -5,7 +5,8 @@
   "main": "server.js",
   "author": "Davis Junior",
   "scripts": {
-    "dev": "nodemon --exec babel-node server.js"
+    "dev": "nodemon --exec babel-node server.js",
+    "popDB": "node populatedb mongodb://localhost/schoollibrary"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
