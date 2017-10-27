@@ -12,6 +12,7 @@ import catalog from './routes/catalog';
 const server = express();
 
 //Set up mongoose connection
+mongoose.Promise = global.Promise;
 const mongoDB = 'mongodb://localhost/schoollibrary';
 mongoose.connect(mongoDB, {
   useMongoClient: true,

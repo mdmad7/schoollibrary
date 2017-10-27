@@ -1,17 +1,79 @@
 import Book from '../models/book';
+import Author from '../models/author';
+import Genre from '../models/genre';
+import BookInstance from '../models/bookinstance';
+
+import async from 'async';
 
 export const index = (req, res) => {
-  res.send('NOT IMPLEMENTED: Site Home Page');
+  async.parallel(
+    {
+      book_count: callback => {
+        Book.count(callback);
+      },
+      book_instance_count: callback => {
+        BookInstance.count(callback);
+      },
+      book_instance_available_count: callback => {
+        BookInstance.count({ status: 'Available' }, callback);
+      },
+      author_count: callback => {
+        Author.count(callback);
+      },
+      genre_count: callback => {
+        Genre.count(callback);
+      },
+    },
+    (err, results) => {
+      res.render('index', {
+        title: 'School Library',
+        error: err,
+        data: results,
+      });
+    },
+  );
 };
-
 // Display list of all books
 export const book_list = (req, res) => {
-  res.send('NOT IMPLEMENTED: Book list');
+  Book.find({}, 'title author')
+    .populate('author')
+    .exec((err, list_books) => {
+      if (err) {
+        return next(err);
+      }
+      //Successful, so render
+      res.render('book_list', { title: 'Book List', book_list: list_books });
+    });
 };
 
 // Display detail page for a specific book
 export const book_detail = (req, res) => {
-  res.send('NOT IMPLEMENTED: Book detail: ' + req.params.id);
+  async.parallel(
+    {
+      book: callback => {
+        Book.findById(req.params.id)
+          .populate('author')
+          .populate('genre')
+          .exec(callback);
+      },
+      book_instance: callback => {
+        BookInstance.find({ book: req.params.id })
+          //.populate('book')
+          .exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      //Successful, so render
+      res.render('book_detail', {
+        title: 'Title',
+        book: results.book,
+        book_instances: results.book_instance,
+      });
+    },
+  );
 };
 
 // Display book create form on GET

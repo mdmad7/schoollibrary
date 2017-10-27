@@ -2,12 +2,36 @@ import BookInstance from '../models/bookinstance';
 
 // Display list of all BookInstances
 export const bookinstance_list = (req, res) => {
-  res.send('NOT IMPLEMENTED: BookInstance list');
+  BookInstance.find()
+    .populate('book')
+    .exec((err, list_bookinstances) => {
+      if (err) {
+        return next(err);
+      }
+      // Successful, so render
+      res.render('bookinstance_list', {
+        title: 'Book Instance List',
+        bookinstance_list: list_bookinstances,
+      });
+
+      console.log(list_bookinstances);
+    });
 };
 
 // Display detail page for a specific BookInstance
 export const bookinstance_detail = (req, res) => {
-  res.send('NOT IMPLEMENTED: BookInstance detail: ' + req.params.id);
+  BookInstance.findById(req.params.id)
+    .populate('book')
+    .exec((err, bookinstance) => {
+      if (err) {
+        return next(err);
+      }
+      //Successful, so render
+      res.render('bookinstance_detail', {
+        title: 'Book:',
+        bookinstance: bookinstance,
+      });
+    });
 };
 
 // Display BookInstance create form on GET

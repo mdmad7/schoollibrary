@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import moment from 'moment';
 
 const AuthorSchema = new Schema(
   {
@@ -19,6 +20,26 @@ AuthorSchema.virtual('name').get(function() {
 AuthorSchema.virtual('url').get(function() {
   return '/catalog/author/' + this._id;
 });
+
+//Virtual for formatted dates
+AuthorSchema.virtual('date_of_birth_formatted').get(function() {
+  return this.date_of_birth
+    ? moment(this.date_of_birth).format('MMMM Do, YYYY')
+    : null;
+});
+
+AuthorSchema.virtual('date_of_death_formatted').get(function() {
+  return this.date_of_death
+    ? moment(this.date_of_death).format('MMMM Do, YYYY')
+    : null;
+});
+
+// AuthorSchema.virtual('lifespan').get(function() {
+//   return this.date_of_birth && this.date_of_death
+//     ? moment(this.date_of_birth).format('MMMM Do, YYYY') -
+//         moment(this.date_of_death).format('MMMM Do, YYYY')
+//     : null;
+// });
 
 //Export model
 export default mongoose.model('Author', AuthorSchema);

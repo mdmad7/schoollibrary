@@ -1,8 +1,24 @@
 body {
+  font-family: Josefin Sans, sans-serif;
   padding: 50px;
-  font: 14px 'Quicksand', Helvetica, Arial, sans-serif;
+  font: 16px;
 }
 
 a {
   color: #00b7ff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Slabo 27px', serif;
+}
+
+.sidebar-nav {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
 }
