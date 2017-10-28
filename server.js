@@ -4,6 +4,7 @@ import logger from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
+import expressValidator from 'express-validator';
 
 import index from './routes/index';
 import users from './routes/users';
@@ -30,6 +31,7 @@ server.set('view engine', 'pug');
 server.use(logger('dev'));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: false }));
+server.use(expressValidator());
 server.use(cookieParser());
 server.use(express.static(path.join(__dirname, 'public')));
 

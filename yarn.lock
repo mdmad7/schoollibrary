@@ -2,6 +2,42 @@
 # yarn lockfile v1
 
 
+"@types/body-parser@*":
+  version "1.16.7"
+  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.16.7.tgz#455fc23fd0ddaaeda6cd6cbb653558276e5920fa"
+  dependencies:
+    "@types/express" "*"
+    "@types/node" "*"
+
+"@types/express-serve-static-core@*":
+  version "4.0.55"
+  resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.0.55.tgz#f53868838a955f98b380819ec9134f5df7d9482f"
+  dependencies:
+    "@types/node" "*"
+
+"@types/express@*", "@types/express@~4.0.34":
+  version "4.0.39"
+  resolved "https://registry.yarnpkg.com/@types/express/-/express-4.0.39.tgz#1441f21d52b33be8d4fa8a865c15a6a91cd0fa09"
+  dependencies:
+    "@types/body-parser" "*"
+    "@types/express-serve-static-core" "*"
+    "@types/serve-static" "*"
+
+"@types/mime@*":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.0.tgz#5a7306e367c539b9f6543499de8dd519fac37a8b"
+
+"@types/node@*":
+  version "8.0.47"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.47.tgz#968e596f91acd59069054558a00708c445ca30c2"
+
+"@types/serve-static@*":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.13.0.tgz#2ef359d8d5982bc011a7a8fa36016e629e8b7635"
+  dependencies:
+    "@types/express-serve-static-core" "*"
+    "@types/mime" "*"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -980,6 +1016,14 @@ expand-range@^1.8.1:
   dependencies:
     fill-range "^2.1.0"
 
+express-validator@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-4.2.1.tgz#329014b2e6753bcc07cbd2c9fd3fc8cec08a0e2b"
+  dependencies:
+    "@types/express" "~4.0.34"
+    lodash "^4.16.0"
+    validator "~8.2.0"
+
 express@^4.16.2:
   version "4.16.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.2.tgz#e35c6dfe2d64b7dca0a5cd4f21781be3299e076c"
@@ -1463,7 +1507,7 @@ lazy-cache@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
 
-lodash@^4.14.0, lodash@^4.17.4:
+lodash@^4.14.0, lodash@^4.16.0, lodash@^4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -2326,6 +2370,10 @@ v8flags@^2.1.1:
   resolved "https://registry.yarnpkg.com/v8flags/-/v8flags-2.1.1.tgz#aab1a1fa30d45f88dd321148875ac02c0b55e5b4"
   dependencies:
     user-home "^1.1.1"
+
+validator@~8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-8.2.0.tgz#3c1237290e37092355344fef78c231249dab77b9"
 
 vary@~1.1.2:
   version "1.1.2"

@@ -78,22 +78,173 @@ export const book_detail = (req, res) => {
 
 // Display book create form on GET
 export const book_create_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Book create GET');
+  //Get all authors and genres, which we can use for adding to our book.
+  async.parallel(
+    {
+      authors: callback => {
+        Author.find(callback);
+      },
+      genres: callback => {
+        Genre.find(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      res.render('book_form', {
+        title: 'Create Book',
+        authors: results.authors,
+        genres: results.genres,
+      });
+    },
+  );
 };
 
 // Handle book create on POST
 export const book_create_post = (req, res) => {
-  res.send('NOT IMPLEMENTED: Book create POST');
+  req.checkBody('title', 'Title must not be empty.').notEmpty();
+  req.checkBody('author', 'Author must not be empty').notEmpty();
+  req.checkBody('summary', 'Summary must not be empty').notEmpty();
+  req.checkBody('isbn', 'ISBN must not be empty').notEmpty();
+
+  req.sanitize('title').escape();
+  req.sanitize('author').escape();
+  req.sanitize('summary').escape();
+  req.sanitize('isbn').escape();
+  req.sanitize('title').trim();
+  req.sanitize('author').trim();
+  req.sanitize('summary').trim();
+  req.sanitize('isbn').trim();
+  req.sanitize('genre').escape();
+
+  const book = new Book({
+    title: req.body.title,
+    author: req.body.author,
+    summary: req.body.summary,
+    isbn: req.body.isbn,
+    genre:
+      typeof req.body.genre === 'undefined' ? [] : req.body.genre.split(','),
+  });
+
+  console.log('BOOK: ' + book);
+
+  const errors = req.validationErrors();
+  if (errors) {
+    // Some problems so we need to re-render our book
+
+    //Get all authors and genres for form
+    async.parallel(
+      {
+        authors: callback => {
+          Author.find(callback);
+        },
+        genres: callback => {
+          Genre.find(callback);
+        },
+      },
+      (err, results) => {
+        if (err) {
+          return next(err);
+        }
+
+        // Mark our selected genres as checked
+        for (i = 0; i < results.genres.length; i++) {
+          if (book.genre.indexOf(results.genres[i]._id) > -1) {
+            //Current genre is selected. Set "checked" flag.
+            results.genres[i].checked = 'true';
+          }
+        }
+
+        res.render('book_form', {
+          title: 'Create Book',
+          authors: results.authors,
+          genres: results.genres,
+          book: book,
+          errors: errors,
+        });
+      },
+    );
+  } else {
+    // Data from form is valid.
+    // We could check if book exists already, but lets just save.
+
+    book.save(err => {
+      if (err) {
+        return next(err);
+      }
+      //successful - redirect to new book record.
+      res.redirect(book.url);
+    });
+  }
 };
 
 // Display book delete form on GET
 export const book_delete_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Book delete GET');
+  async.parallel(
+    {
+      book: callback => {
+        Book.findById(req.params.id).exec(callback);
+      },
+      book_instance: callback => {
+        BookInstance.find({ book: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      console.log(results.book_instance);
+      //Successful, so render
+      res.render('book_delete', {
+        title: 'Delete Book',
+        book: results.book,
+        book_instances: results.book_instance,
+      });
+    },
+  );
 };
 
 // Handle book delete on POST
 export const book_delete_post = (req, res) => {
-  res.send('NOT IMPLEMENTED: Book delete POST');
+  req.checkBody('bookid', 'Book id must exist').notEmpty();
+  async.parallel(
+    {
+      book: callback => {
+        Book.findById(req.body.bookid).exec(callback);
+      },
+      book_instance: callback => {
+        BookInstance.find(
+          { book_instance: req.body.bookid },
+          'title summary',
+        ).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      //Success
+      if (results.book_instance.length > 0) {
+        //Book has instances. Render in same way as for GET route.
+        res.render('book_delete', {
+          title: 'Delete Book',
+          book: results.book,
+          book_instance: results.book_instance,
+        });
+        return;
+      } else {
+        //Author has no books. Delete object and redirect to the list of authors.
+        Book.findByIdAndRemove(req.body.bookid, function deleteBook(err) {
+          if (err) {
+            return next(err);
+          }
+          //Success - got to author list
+          res.redirect('/catalog/books');
+        });
+      }
+    },
+  );
 };
 
 // Display book update form on GET
