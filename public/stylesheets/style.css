@@ -4,6 +4,10 @@ body {
   font: 16px;
 }
 
+li {
+  list-style: none;
+}
+
 a {
   color: #00b7ff;
 }
