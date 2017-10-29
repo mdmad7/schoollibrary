@@ -76,7 +76,6 @@ export const genre_create_post = (req, res) => {
     // Data from form is valid.
     //Check if Genre with same name already exists
     Genre.findOne({ name: req.body.name }).exec((err, found_genre) => {
-      console.log('found_genre: ' + found_genre);
       if (err) {
         return next(err);
       }
@@ -164,10 +163,53 @@ export const genre_delete_post = (req, res) => {
 
 // Display Genre update form on GET
 export const genre_update_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Genre update GET');
+  req.sanitize('id').escape();
+  req.sanitize('id').trim();
+
+  Genre.findById(req.params.id).exec((err, genre) => {
+    if (err) {
+      next(err);
+    }
+
+    res.render('genre_form', {
+      title: 'Update Genre',
+      genre: genre,
+    });
+  });
 };
 
 // Handle Genre update on POST
 export const genre_update_post = (req, res) => {
-  res.send('NOT IMPLEMENTED: Genre update POST');
+  //Sanitize id passed in.
+  req.sanitize('id').escape();
+  req.sanitize('id').trim();
+
+  //Check that the name field is not empty
+  req.checkBody('name', 'Genre name required').notEmpty();
+
+  //Trim and escape the name field.
+  req.sanitize('name').escape();
+  req.sanitize('name').trim();
+
+  //Create a genre object with escaped and trimmed data.
+  const genre = new Genre({ name: req.body.name, _id: req.params.id });
+
+  //Run the validators
+  const errors = req.validationErrors();
+
+  if (errors) {
+    res.render('genre_form', {
+      title: 'Update Genre',
+      genre: genre,
+      errors: errors,
+    });
+  } else {
+    Genre.findByIdAndUpdate(req.params.id, genre, {}, (err, thegenre) => {
+      if (err) {
+        return next(err);
+      }
+
+      res.redirect(thegenre.url);
+    });
+  }
 };
